@@ -1,0 +1,12 @@
+﻿-----------------------KHI CÓ LỖI----------------------------
+1. Lỗi khi pull dữ liệu fatal: refusing to merge unrelated histories
+-> git checkout master
+git merge origin/master --allow-unrelated-histories
+git add -A .
+git commit -m "Upload"
+git push
+
+2. Lỗi khi push dữ liệu
+! [rejected]        master -> dev (fetch first)
+error: failed to push some refs to...
+-> Làm như lỗi 1. và git push $remote_name $branch_name_of_remote

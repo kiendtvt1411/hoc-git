@@ -1,0 +1,37 @@
+﻿---------------------LÀM VIỆC VỚI GITHUB-----------------------------
+1. Đăng ký tài khoản, chỉnh sửa profile
+
+2. SSH Access
+
+-------------ĐÓNG GÓP VÀO 1 DỰ ÁN TRÊN GITHUB------------
+ 1. Forking Projects: Tạo ra 1 bản copy của dự án về account của mình,
+ không được tính vào profile nhưng vẫn giúp ta làm việc, owner vẫn là của
+ người khác. Vì khi làm việc với người khác, chúng ta cần học hỏi và làm
+ việc với code của họ. Sau khi viết thêm, đóng góp chúng ta có thể pull
+ request đóng góp cho họ (phải có sự đồng ý của họ)
+
+2. Các bước : fork dự án về (vì sau khi fork thì đường dẫn để clone sẽ 
+khác)
++ Tạo 1 topic branch từ long-run branch master đó
++ Tạo ra 1 vài commit để cải thiện project
++ Push topic branch này lên GitHub project mình đã fork
++ Mở tab Pull Request trên Github
++ Thảo luận, đưa ra ý kiến, tiếp tục commit, chờ họ accept để merge vào
+
+-------------BẢO TRÌ DỰ ÁN TRONG GITHUB-----------------------
+1. Tạo mới Repo
+
+2. Thêm Collaborators : Vào setting -> collaborator
+
+3. Quản lý Pull Request
+
+4. Đề xuất và thông báo : Vào tab issue -> @ten noi dung -> nhìn thấy issue
+-> thông báo đến chủ
+
+5. Admin trong Project
+
+-------------QUẢN LÝ TEAM DỰ ÁN GITHUB-----------------------
+Github cho phép tạo tài khoản dạng tổ chức (khác dạng cá nhân)
+Là 1 group để mọi người chia sẻ project với nhau
+
+1. Vào github.com/ + icon /New Organization

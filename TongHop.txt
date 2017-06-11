@@ -1,0 +1,293 @@
+﻿--------------------TRICK ALIAS------------------------------------
+Để viết câu lệnh nhanh và dễ dàng hơn
+Mỗi lệnh = 1 alias
+	git config --global alias.$alias_name branch (hoặc status hoặc log hoặc commit..)
+Nối chuỗi để alias lệnh dài hơn
+	git config --global alias.$alias_name "Lệnh dài nhiều option"
+VD : git config --global alias.unstage "reset HEAD --" (-- nghĩa là truyền $file_name vào)
+
+--------------------LỆNH CƠ BẢN---------------------------
+1. Cấu hình Git :
+git config --global user.name "$ten"
+git config --global user.email "$email"
+muốn thay đổi git config --global --replace-all user.name "$ten"
+* Cấu hình editor -> dùng khi muốn commit dài
+"C:/Program Files/Notepad++/notepad++.exe" 
+-multiInst -notabbar -nosession -noPlugin
+* Xem list cấu hình git config --global --list
+hoặc cấu hình trong repo hiện tại : git config --list
+
+-> Tạo local repo mới : git init (nhưng chưa tạo ra branch nào)
+-> HEAD rỗng
+
+2. Xem những file nào trong staging
+git diff --staged
+
+3. Đẩy file ra khỏi git (untracked) mà không xóa file trong ổ cứng vì
+còn cache
+git rm --cached $ten_file
+
+4. Xóa các file trong thư mục bin/ có định dạng *.txt vừa xóa khỏi git
+vừa xóa vật lý trong ổ cứng luôn
+git rm bin/\*.txt
+
+5. Di chuyển 1 thư mục này sang 1 thư mục khác 
+(thực chất là tạo file_to mới với nội dung file_from cũ)
+(thực chất là đổi tên file_from thành file_to)
+(file_from trở thành file mới chưa được tracked)
+git mv file_from file_to
+
+6. Xem commit history chi tiết
+git log --stat
+
+7. Xem commit history theo format
+git log --pretty=format:"%h - %an, %ar - %s"
+
+8*. Hủy bỏ - Undo things (undoing things, unstaging a staged file, unmodifying a modified file
++ Undo commit :      git commit -m "lần commit lỗi"
+		git add forgotten_file
+		git commit --amend -> ghi đè commit mới lên lần commit trước đó
++ Hủy bỏ staging 1 file staged: 
+	git reset HEAD file_staged
++ Quay trở lại trạng thái trước khi mình sửa (ngu): (cần cẩn thận vì sẽ bị xóa hết hiện tại)
+	git checkout -- file_modified_ngu
++ Quay trở lại trạng thái trước khi MERGE bị conflict
+	git revert -m 1 HEAD
+
+9. Tạo một remote mới liên kết với remote repository
+	git remote add kiendz https://github.com/kiendtvt1411/re-test.git
+	(lưu ý: thư mục hiện tải phải là 1 là repository đã)
+
+10. Lệnh git fetch $remote_name để xem trên remote repository này có 
+những gì mới cập nhật hay thay đổi chứ chưa tải về local repository 
+
+11. Lệnh git pull $remote_name $branch_name_of_repo mới là lệnh tải về repository của mình
+với branch_name cần tải dữ liệu đó
+
+12. Lệnh git push $remote_name $branch_name_of_local dùng để push file đã commit
+lên trên nhánh $branch_name của remote repository đích đó
+
+13. Show thông tin remote : git remote show $remote_name
+
+14. Đổi tên remote : git remote rename $ten_1 $ten_2
+
+15. Hủy remote đó đi : git remote rm $ten
+
+16. Tạo mới 1 annotated tag
+	git tag -a $ten_tag -m "$message"
+
+17. Show 1 tag : git show $ten_tag
+Và : show tag từ các remote repo : git ls-remote --tags
+
+18. Thêm tag cho 1 commit trước đó :
+	git tag -a $ten_tag $SHA_key_of_commit
+-> mới chỉ là gắn tag vào commit đó trên local repo
+-> push (share tag) lên remote : git push $ten_remote $tag_name 
+(or --tags để push all tag)
+-> vào mục release trên remote repo để xem
+
+19. Xóa tag : git tag -d $tag_name
+Và : xóa tag ở remote repo : git push $remote_name --delete $tag_name
+
+20. Để phân ra 1 nhánh mới cho tag (version) đó
+	git checkout -b $branch_name $tag_name
+
+-------------------------LÀM VIỆC VỚI NHÁNH LOCAL-------------------------------
+1. Xem các branch trong repo -> xem branch hiện tại:
+	git branch (branch đang đứng được bôi xanh)
+	git branch -v (thêm phần commit cuối cùng của mỗi nhánh)
+	git symbolic-ref --short HEAD (kiểm tra current branch)
+	git log --oneline --decorate
+
+2. Tạo mới branch : git branch $branch_name
+
+3. Chuyển sang nhánh khác : git checkout $branch_name
+
+4. Push dữ liệu lên với $new_branch của local repo lên đồng bộ với 
+remote repo : git push --set--upstream $remote_name $new_branch_local_repo
+để cấu hình lần push đầu, sau đó thì : git push $remote_name $branch_name
+(nếu ko có $branch_name thì sẽ hiểu mặc định là $new_branch ở lệnh trc
+
+5. Merge dữ liệu từ nhánh khác vào nhánh hiện tại:
+	git merge $another_branch
+==> Xem nhánh nào đã merge vào nhánh hiện tại:
+	git branch --merged
+	git branch --no-merged
+
+6. Khi có xung đột (conflict) (ví dụ như 2 người sửa cùng đoạn mã với 
+cùng tên branch cùng muốn push --> git không hiểu nên merge đoạn nào
+-> git diff : so sánh trạng thái 2 file cùng tên đó
+-> merge thủ công) -> dùng mergetool
+-> config mergetool : git config --global merge.tool diffmerge (phải cài 
+trước diffmerge về máy với link : https://sourcegear.com/diffmerge/webhelp/sec__git__windows__msysgit.html)
+->  khi git merge $another_branch bị conflict
+-> git mergetool -> khi được hỏi gõ diffmerge
+(1 số note khi cài mergetool là :
+ -> tham khảo http://stackoverflow.com/questions/13868052/how-to-get-diffmerge-configured-to-work-with-git-on-windows-7-or-windows-2012
+ -> tìm .gitconfig : .gitconfig file thì nằm ở vị trí này "C:\Users\yourt-username\.gitconfig" 
+
+7. Xóa 1 nhánh (không phải nhánh hiện tại)
+	git branch -D $branch_wanna_del (nhánh chưa merge)
+	git branch -d $branch_wanna_del (nhánh đã merge)
+
+8. Tool Merge nâng cao:
+-> git merge --abort : bỏ qua merge, trở về trạng thái trc khi có conflict
+-> git revert -m 1 HEAD (undoing Merges và tạo commit mới, số 1 nghĩa
+là giữ nguyên nhánh 1, bỏ nội dung nhánh 2, còn số 2 là ngược lại)
+
+--------------------------LÀM VIỆC VỚI NHÁNH REMOTE------------------
+1. Lấy danh sách nhánh từ Remote:
+	git ls-remote $remote_name
+	git remote show $remote_name
+
+2. Cấu hình để không phải nhập mật khẩu mỗi lần push
+	git config --global credential.helper cache
+
+3. Clone $branch_name ở trên remote và checkout vào nó luôn
+(mặc định clone về thì tên nhánh mới ở local = tên nhánh clone từ remote
+VD : testing (remote) => origin/testing (local))
+Định dạng của branch đó khi ở local là $remote_name/$branch_name  
+	git checkout -b $remote_name/$branch_name
+
+Muốn clone về mà đặt tên riêng theo ý mình ở local thì
+	git checkout --track -b $differ_branch_name
+
+4. Lệnh delete nhánh clone (xóa ở local vì vừa clone) đó như delete branch ở local
+	git branch -d(-D) $branch_wanna_del
+Còn để xóa nhánh trên remote branch (xóa trên remote) thì
+	git push $remote_name --delete $branch_name
+
+5. Nhìn các nhánh đang tracking
+	git branch -vv
+
+---------------------------------REBASE TRONG GIT-----------------------
+<Kiểm soát được lịch sử, thứ tự các lần commit, chức năng như MERGE>
+1. Bản chất của REBASE : 
+Ví dụ cần gộp lần commit cuối của nhánh_1 (nguồn) vào nhánh_2 (đích)
+ + MERGE sẽ gộp nội dung từ nhánh_1 vào nhánh_2 tạo thành nhánh_2
+commit mới có parent là commit trc đó ở 2 nhánh là nhánh_1 và nhánh_2  
+(commit mới tạo sẽ được trỏ bởi cả nhánh_1 và nhánh_2)
+ + REBASE thì : bốc luôn cả lần commit cuối ở nhánh_1 xuống gộp vào
+thành commit cuối ở nhánh_2 (commit mới tạo sẽ trỏ bởi nhánh_1) 
+ + Quá trình REBASE được thực hiện bằng cách thực hiện lại các thay đổi từ 
+nhánh này qua nhánh khác theo thứ tự chúng đã được thực hiện, trong khi đó 
+MERGE lại lấy hai điểm kết thúc và gộp chúng lại với nhau.
+
+2. Cú pháp
+ + Trở về nhánh chứa dữ liệu cần gộp đã commit (nhánh_1 - nhánh nguồn)
+	git checkout $nhánh_1
+ + Chạy lại (replay) nhánh nguồn đó lên nhánh cần gộp (nhánh_2 - nhánh đích)
+	git rebase $nhánh_2
+ + Sau đó lại về nhánh đích (nhánh cần gộp)
+	git checkout $nhánh_2
+ + Thực hiện fast-forward merge tại nhánh này
+
+VD cho quá trình này :
+	C3 (last commit) ở nhánh_1 cần được gộp vào nhánh_2 
+(nhánh_2 đang có last commit là C4)
+	+ Nếu dùng merge thì sẽ tạo ra C5 tại nhánh_2 với $nhánh_1
+và $nhánh_2 cùng trỏ tới C5
+	+ Nếu dùng rebase : tạo ra C3' ở sau C4 của nhánh_2, C3' tức
+là phần rebase được chạy ở nhánh_2 -> fast-forward merge để $nhánh_1
+và $nhánh_2 cùng trỏ tới C3' này
+--> Không có sự khác biệt về kết quả khi dùng MERGE và REBASE, tuy
+nhiên dùng REBASE sẽ giúp ta có lịch sử rõ ràng hơn
+
+3. REBASE nâng cao
+ + Tham khảo từ https://git-scm.com/book/vi/v1/
+Ph%C3%A2n-Nh%C3%A1nh-Trong-Git-Rebasing
+ + Kịch bản : có 3 nhánh master, server, client
+ + Cú pháp : git rebase --onto master server client
+
+4. Lời khuyên khi dùng REBASE:
+ + Chỉ nên thao tác trên local chứ không share cho người khác
+ + Hoàn thiện rồi mới push lên share
+ + Vì hủy bỏ đi commit cũ
+ + Vì thay đổi thứ tự commit cũ trên repo
+
+---------------LÀM RÕ HƠN VỀ RESET------------------------
+Có 3 TREE trong Git
+Theo vòng đời của 1 commit thì dựa vào 3 cây trên:
+
+	Working Directory ----------> Index -----------------> HEAD
+		|		|		|
+		|<-----------------Checkout Project-------------|
+		|		|		|
+		|----Stage Files------->|		|
+		|		|		|
+		|		|----Commit---------->|
+		
+* Chú ý: mục 1,2,3,4 áp dụng cho Commit Level; 5,6 cho File Level
+
+1. Con trỏ HEAD trỏ đến commit cuối cùng trong nhánh hiện tại
+và sẽ là parent của commit tiếp theo
+
+2. Index (commit id) tương đương Staging Area (những thứ git nhìn khi 
+ta run commit)
+	git ls-files -s
+
+3. Working Directory: 2 cây trên lưu ở trong .git folder
+Còn cây này thì lưu vật lý, nơi chưa cập nhật vào git
+
+4. Workflow Processed: 
+Bản chất của git với ý hiểu cá nhân :
++ 1 dự án có nhiều branch
++ trong mỗi branch lại có nhiều commit
++ mỗi commit là 1 snapshot chụp lại trạng thái các file trong nhánh đó
++ head sẽ trỏ đến commit cuối của branch đang làm việc
++ tag là 1 thứ đồng hành song song, khi có 1 branch nào đó với 1 commit
+nào đó được gắn tag thì đó là lúc release
+
+-> khi gõ lệnh (git reset $sha_key_commit_40_char) 
+	hoặc git reset --soft HEAD~
+sẽ chuyển con trỏ head về trỏ vào commit đó, điều này chỉ thay đổi 
+ở HEAD, chứ còn Index và Working Directory vẫn chứa phần commit 
+mới nhất. -> dùng (git checkout $ten_file) khôi phục lại 
+-> git reset --mixed HEAD~ thay đổi head và index
+-> git reset --hard HEAD~ thay đổi cả 3 (việc này sẽ xóa bản mới nhất đi)
+* trick : 2 dấu '~' sẽ quay về 2 bước, mặc định là 1 bước
+
+5. Git Reset file :
+	git reset file.txt <=> git reset --mixed HEAD file.txt
+
+6. Khác nhau giữa CHECKOUT và RESET:
++ checkout thì HEAD trỏ đến commit cuối của nhánh được check đến
++ reset thì HEAD trỏ về commit cha của commit đang được trỏ, không care nhánh
+VD : commit A <-master, commit B<-develop<-HEAD có commit A là cha
+-> Sau khi reset : commit A <-master, develop<-HEAD, commit B không có gì
+-> Sau khi checkout : commit A <-master<-HEAD, commit B<-develop
+
+--------------------------STASHING VÀ CLEANING---------------------
+1. Trường hợp xảy ra : Đang làm việc và có 1 hotfix cần fix ngay và chuyển
+sang nhánh khác, bỏ dở việc đang làm. Nhưng chúng ta lại không muốn
+công việc đang làm dở để chuyển sang fix lỗi. 
+	-> git stash (stash : giở lại) hoặc git stash save
+	-> xem list stash trên tất cả các nhánh : git stash list
+-> bạn gom công việc đang làm dở lại, gom modified và staged file vào
+trong 1 stack của unfinished change và reapply lại bất cứ khi nào
+-> reapply : git stash apply stash@{số_hiệu_khi_xem_list_stash}, nếu
+không đưa số hiệu vào thì sẽ là lần sau nhất
+-> add -> commit như bt
+-> xóa stash : git stash drop stash@{số}
+-> nếu muốn apply và xóa ngay lập tức thì git stash pop
+
+Tạo 1 branch từ stash : git stash $branch_name
+
+2. Clean Working Directory: 
+Khi bạn không muốn stash 1 vài file làm việc trong working directory
+-> git clean
+-> cách an toàn hơn : git stash --all để remove tất cả nhưng save vào stash
+-> remove tất cả untracked file : git clean -f -d
+
+-----------------------KHI CÓ LỖI----------------------------
+1. Lỗi khi pull dữ liệu fatal: refusing to merge unrelated histories
+-> git checkout master
+git merge origin/master --allow-unrelated-histories
+git add -A .
+git commit -m "Upload"
+git push
+
+2. Lỗi khi push dữ liệu
+! [rejected]        master -> dev (fetch first)
+error: failed to push some refs to...
+-> Làm như lỗi 1. và git push $remote_name $branch_name_of_remote

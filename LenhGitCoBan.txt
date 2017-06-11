@@ -1,0 +1,93 @@
+﻿--------------------TRICK ALIAS------------------------------------
+Để viết câu lệnh nhanh và dễ dàng hơn
+Mỗi lệnh = 1 alias
+	git config --global alias.$alias_name branch (hoặc status hoặc log hoặc commit..)
+Nối chuỗi để alias lệnh dài hơn
+	git config --global alias.$alias_name "Lệnh dài nhiều option"
+VD : git config --global alias.unstage "reset HEAD --" (-- nghĩa là truyền $file_name vào)
+
+--------------------LỆNH CƠ BẢN---------------------------
+1. Cấu hình Git :
+git config --global user.name "$ten"
+git config --global user.email "$email"
+muốn thay đổi git config --global --replace-all user.name "$ten"
+* Cấu hình editor -> dùng khi muốn commit dài
+"C:/Program Files/Notepad++/notepad++.exe" 
+-multiInst -notabbar -nosession -noPlugin
+* Xem list cấu hình git config --global --list
+hoặc cấu hình trong repo hiện tại : git config --list
+
+-> Tạo local repo mới : git init (nhưng chưa tạo ra branch nào)
+-> HEAD rỗng
+
+2. Xem những file nào trong staging
+git diff --staged
+
+3. Đẩy file ra khỏi git (untracked) mà không xóa file trong ổ cứng vì
+còn cache
+git rm --cached $ten_file
+
+4. Xóa các file trong thư mục bin/ có định dạng *.txt vừa xóa khỏi git
+vừa xóa vật lý trong ổ cứng luôn
+git rm bin/\*.txt
+
+5. Di chuyển 1 thư mục này sang 1 thư mục khác 
+(thực chất là tạo file_to mới với nội dung file_from cũ)
+(thực chất là đổi tên file_from thành file_to)
+(file_from trở thành file mới chưa được tracked)
+git mv file_from file_to
+
+6. Xem commit history chi tiết
+git log --stat
+
+7. Xem commit history theo format
+git log --pretty=format:"%h - %an, %ar - %s"
+
+8*. Hủy bỏ - Undo things (undoing things, unstaging a staged file, unmodifying a modified file
++ Undo commit :      git commit -m "lần commit lỗi"
+		git add forgotten_file
+		git commit --amend -> ghi đè commit mới lên lần commit trước đó
++ Hủy bỏ staging 1 file staged: 
+	git reset HEAD file_staged
++ Quay trở lại trạng thái trước khi mình sửa (ngu): (cần cẩn thận vì sẽ bị xóa hết hiện tại)
+	git checkout -- file_modified_ngu
++ Quay trở lại trạng thái trước khi MERGE bị conflict
+	git revert -m 1 HEAD
+
+9. Tạo một remote mới liên kết với remote repository
+	git remote add kiendz https://github.com/kiendtvt1411/re-test.git
+	(lưu ý: thư mục hiện tải phải là 1 là repository đã)
+
+10. Lệnh git fetch $remote_name để xem trên remote repository này có 
+những gì mới cập nhật hay thay đổi chứ chưa tải về local repository 
+
+11. Lệnh git pull $remote_name $branch_name_of_repo mới là lệnh tải về repository của mình
+với branch_name cần tải dữ liệu đó
+
+12. Lệnh git push $remote_name $branch_name_of_local dùng để push file đã commit
+lên trên nhánh $branch_name của remote repository đích đó
+
+13. Show thông tin remote : git remote show $remote_name
+
+14. Đổi tên remote : git remote rename $ten_1 $ten_2
+
+15. Hủy remote đó đi : git remote rm $ten
+
+16. Tạo mới 1 annotated tag
+	git tag -a $ten_tag -m "$message"
+
+17. Show 1 tag : git show $ten_tag
+Và : show tag từ các remote repo : git ls-remote --tags
+
+18. Thêm tag cho 1 commit trước đó :
+	git tag -a $ten_tag $SHA_key_of_commit
+-> mới chỉ là gắn tag vào commit đó trên local repo
+-> push (share tag) lên remote : git push $ten_remote $tag_name 
+(or --tags để push all tag)
+-> vào mục release trên remote repo để xem
+
+19. Xóa tag : git tag -d $tag_name
+Và : xóa tag ở remote repo : git push $remote_name --delete $tag_name
+
+20. Để phân ra 1 nhánh mới cho tag (version) đó
+	git checkout -b $branch_name $tag_name

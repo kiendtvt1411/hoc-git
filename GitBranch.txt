@@ -1,0 +1,67 @@
+﻿-------------------------LÀM VIỆC VỚI NHÁNH LOCAL-------------------------------
+1. Xem các branch trong repo -> xem branch hiện tại:
+	git branch (branch đang đứng được bôi xanh)
+	git branch -v (thêm phần commit cuối cùng của mỗi nhánh)
+	git symbolic-ref --short HEAD (kiểm tra current branch)
+	git log --oneline --decorate
+
+2. Tạo mới branch : git branch $branch_name
+
+3. Chuyển sang nhánh khác : git checkout $branch_name
+
+4. Push dữ liệu lên với $new_branch của local repo lên đồng bộ với 
+remote repo : git push --set--upstream $remote_name $new_branch_local_repo
+để cấu hình lần push đầu, sau đó thì : git push $remote_name $branch_name
+(nếu ko có $branch_name thì sẽ hiểu mặc định là $new_branch ở lệnh trc
+
+5. Merge dữ liệu từ nhánh khác vào nhánh hiện tại:
+	git merge $another_branch
+==> Xem nhánh nào đã merge vào nhánh hiện tại:
+	git branch --merged
+	git branch --no-merged
+
+6. Khi có xung đột (conflict) (ví dụ như 2 người sửa cùng đoạn mã với 
+cùng tên branch cùng muốn push --> git không hiểu nên merge đoạn nào
+-> git diff : so sánh trạng thái 2 file cùng tên đó
+-> merge thủ công) -> dùng mergetool
+-> config mergetool : git config --global merge.tool diffmerge (phải cài 
+trước diffmerge về máy với link : https://sourcegear.com/diffmerge/webhelp/sec__git__windows__msysgit.html)
+->  khi git merge $another_branch bị conflict
+-> git mergetool -> khi được hỏi gõ diffmerge
+(1 số note khi cài mergetool là :
+ -> tham khảo http://stackoverflow.com/questions/13868052/how-to-get-diffmerge-configured-to-work-with-git-on-windows-7-or-windows-2012
+ -> tìm .gitconfig : .gitconfig file thì nằm ở vị trí này "C:\Users\yourt-username\.gitconfig" 
+
+7. Xóa 1 nhánh (không phải nhánh hiện tại)
+	git branch -D $branch_wanna_del (nhánh chưa merge)
+	git branch -d $branch_wanna_del (nhánh đã merge)
+
+8. Tool Merge nâng cao:
+-> git merge --abort : bỏ qua merge, trở về trạng thái trc khi có conflict
+-> git revert -m 1 HEAD (undoing Merges và tạo commit mới, số 1 nghĩa
+là giữ nguyên nhánh 1, bỏ nội dung nhánh 2, còn số 2 là ngược lại)
+
+--------------------------LÀM VIỆC VỚI NHÁNH REMOTE------------------
+1. Lấy danh sách nhánh từ Remote:
+	git ls-remote $remote_name
+	git remote show $remote_name
+
+2. Cấu hình để không phải nhập mật khẩu mỗi lần push
+	git config --global credential.helper cache
+
+3. Clone $branch_name ở trên remote và checkout vào nó luôn
+(mặc định clone về thì tên nhánh mới ở local = tên nhánh clone từ remote
+VD : testing (remote) => origin/testing (local))
+Định dạng của branch đó khi ở local là $remote_name/$branch_name  
+	git checkout -b $remote_name/$branch_name
+
+Muốn clone về mà đặt tên riêng theo ý mình ở local thì
+	git checkout --track -b $differ_branch_name
+
+4. Lệnh delete nhánh clone (xóa ở local vì vừa clone) đó như delete branch ở local
+	git branch -d(-D) $branch_wanna_del
+Còn để xóa nhánh trên remote branch (xóa trên remote) thì
+	git push $remote_name --delete $branch_name
+
+5. Nhìn các nhánh đang tracking
+	git branch -vv
